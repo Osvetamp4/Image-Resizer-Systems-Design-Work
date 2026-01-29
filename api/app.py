@@ -17,7 +17,13 @@ def health():
 def queue_task():
     """
     Queue a task to Redis
-    Expects JSON: {"image_url": "..."}
+    Expects JSON: {
+        "image_url": "...",
+        "parameters": {
+            "width": 100,
+            "height": 100
+        }
+    }
     """
     try:
         data = request.get_json()
