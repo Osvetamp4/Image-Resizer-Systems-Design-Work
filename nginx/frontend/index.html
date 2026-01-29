@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Resizer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Image Resizer</h1>
+        
+        <div class="form-section">
+            <h2>Upload Image</h2>
+            <form id="resizeForm">
+                <div class="form-group">
+                    <label for="imageUrl">Image URL:</label>
+                    <input type="url" id="imageUrl" placeholder="https://example.com/image.jpg" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="width">Width (px):</label>
+                    <input type="number" id="width" placeholder="800" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="height">Height (px):</label>
+                    <input type="number" id="height" placeholder="600" required>
+                </div>
+                
+                <button type="submit" class="btn">Queue Resize Task</button>
+            </form>
+        </div>
+
+        <div id="statusSection" class="status-section" style="display: none;">
+            <h2>Task Status</h2>
+            <p>Task ID: <strong id="taskId"></strong></p>
+            <p>Status: <strong id="taskStatus">Processing...</strong></p>
+            <button class="btn btn-secondary" onclick="checkStatus()">Refresh Status</button>
+        </div>
+
+        <div id="resultSection" class="result-section" style="display: none;">
+            <h2>Result</h2>
+            <img id="resultImage" src="" alt="Resized image" class="result-image">
+            <p id="resultMessage"></p>
+            <button class="btn btn-secondary" onclick="resetForm()">Resize Another Image</button>
+        </div>
+
+        <div id="errorSection" class="error-section" style="display: none;">
+            <p id="errorMessage"></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

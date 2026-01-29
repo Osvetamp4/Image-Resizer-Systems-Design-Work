@@ -1,5 +1,24 @@
 services:
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+
   api:
     build: ./api
     expose:
       - "5000"
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    expose:
+      - "6379"
+
+  worker:
+    build: ./worker
+    depends_on:
+      - redis
