@@ -28,7 +28,8 @@ def process_task(task):
     img.save(f"/shared/resized_{task_id}.png")
     result = {
             "status": "completed",
-            "timestamp": datetime.now().isoformat(),
+            "timestamp_queued": task["timestamp"],
+            "timestamp_completed": datetime.now().isoformat(),
             "task_id": task_id,
             "result":{
                 "resized_image_path": f"/shared/resized_{task_id}.png"

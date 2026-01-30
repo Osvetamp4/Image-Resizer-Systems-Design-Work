@@ -42,8 +42,9 @@ resizeForm.addEventListener('submit', async (e) => {
         const data = await response.json();
         currentTaskId = data.task_id;
         
-        //shows status section
+        //shows status section should be queued
         document.getElementById('taskId').textContent = currentTaskId;
+        document.getElementById('taskStatus').textContent = data.status
         statusSection.style.display = 'block';
         
         //recheck every two seconds until we get the dictionary update from check status
