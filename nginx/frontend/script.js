@@ -16,7 +16,6 @@ const errorSection = document.getElementById('errorSection');
 
 resizeForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    
     hideAllSections();
     showLoading();
     
@@ -43,13 +42,22 @@ resizeForm.addEventListener('submit', async (e) => {
         const data = await response.json();
         currentTaskId = data.task_id;
         
-        // Show status section
+        //shows status section
         document.getElementById('taskId').textContent = currentTaskId;
         statusSection.style.display = 'block';
         
-        // Start checking status every 2 seconds
+        //recheck every two seconds until we get the dictionary update from check status
+        let startTime = Date.now();
+        const TIMEOUT = 30000; //this is 30 seconds
         checkStatus();
-        statusCheckInterval = setInterval(checkStatus, 2000);
+        statusCheckInterval = setInterval(()=>{
+            if (Date.now() - startTime > TIMEOUT){
+                clearInterval(statusCheckInterval);
+                showError('Task timed out after 30 seconds');
+                return;
+            }
+            checkStatus();
+        }, 2000);
         
     } catch (error) {
         showError(`Failed to queue task: ${error.message}`);
@@ -69,16 +77,14 @@ async function checkStatus() {
         
         const data = await response.json();
         
-        // Update status display
+        //we update the status display
         document.getElementById('taskStatus').textContent = data.status || 'unknown';
         
-        // If task is complete, show result
         if (data.status === 'completed' && data.result) {
             clearInterval(statusCheckInterval);
             showResult(data.result);
         }
         
-        // If task failed
         if (data.status === 'failed') {
             clearInterval(statusCheckInterval);
             showError(`Task failed: ${data.error || 'Unknown error'}`);
@@ -94,22 +100,22 @@ function showResult(result) {
     statusSection.style.display = 'none';
     resultSection.style.display = 'block';
     
-    if (result.image_url) {
-        document.getElementById('resultImage').src = result.image_url;
+    if (result.resized_image_path) {
+        document.getElementById('resultImage').src = result.resized_image_path;
     }
     
     document.getElementById('resultMessage').textContent = 
         `Image resized to ${result.width}x${result.height}px`;
 }
 
-// Show error
+//showing errors
 function showError(message) {
     hideAllSections();
     document.getElementById('errorMessage').textContent = message;
     errorSection.style.display = 'block';
 }
 
-// Show loading message
+//shows the loading progress
 function showLoading() {
     const formSection = document.querySelector('.form-section');
     const loadingMsg = document.createElement('p');
@@ -121,7 +127,7 @@ function showLoading() {
     formSection.appendChild(loadingMsg);
 }
 
-// Hide all sections
+//hides all the sections
 function hideAllSections() {
     const loadingMsg = document.getElementById('loadingMessage');
     if (loadingMsg) loadingMsg.remove();
@@ -131,7 +137,7 @@ function hideAllSections() {
     errorSection.style.display = 'none';
 }
 
-// Reset form
+//resets the form for additional input
 function resetForm() {
     clearInterval(statusCheckInterval);
     currentTaskId = null;
@@ -141,5 +147,5 @@ function resetForm() {
     formSection.style.display = 'block';
 }
 
-// Initial display
+
 formSection.style.display = 'block';

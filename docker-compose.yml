@@ -5,6 +5,8 @@ services:
       - "80:80"
     depends_on:
       - api
+    volumes:
+      - resized_images:/usr/share/nginx/html/shared
 
   api:
     build: ./api
@@ -22,3 +24,7 @@ services:
     build: ./worker
     depends_on:
       - redis
+    volumes:
+    - resized_images:/shared
+volumes:
+  resized_images:

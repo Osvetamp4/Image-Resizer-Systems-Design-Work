@@ -13,9 +13,30 @@ redis_client = redis.Redis(host='redis', port=6379, decode_responses=True)
 
 def process_task(task):
     """we process a singular task from redis q"""
+    #we downloaded the img
     response = requests.get(task['image_url'])
     img = Image.open(BytesIO(response.content))
-    pass
+    
+    #now we resize img
+    width = task['parameters']['width']
+    height = task['parameters']['height']
+    
+    img = img.resize((width, height))
+    
+
+    task_id = task['id']
+    img.save(f"/shared/resized_{task_id}.png")
+    result = {
+            "status": "completed",
+            "timestamp": datetime.now().isoformat(),
+            "task_id": task_id,
+            "result":{
+                "resized_image_path": f"/shared/resized_{task_id}.png"
+            }
+        }
+    redis_client.set(f"task_result:{task_id}", json.dumps(result))
+    
+    
 
 def working_loop():
     """We constantly run and listen for new tasks in Redis"""
