@@ -6,8 +6,7 @@ services:
     depends_on:
       - api
     volumes:
-      - resized_images:/usr/share/nginx/html/shared
-
+      - resized_images:/usr/share/nginx/html/shared #we mount the shared volume directly into the nginx folder for easy access
   api:
     build: ./api
     expose:
@@ -25,6 +24,6 @@ services:
     depends_on:
       - redis
     volumes:
-    - resized_images:/shared
+      - resized_images:/shared
 volumes:
   resized_images:
