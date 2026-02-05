@@ -21,9 +21,18 @@ services:
 
   worker:
     build: ./worker
+    expose:
+      - "8000"
     depends_on:
       - redis
     volumes:
       - resized_images:/shared
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+     - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
 volumes:
   resized_images:
