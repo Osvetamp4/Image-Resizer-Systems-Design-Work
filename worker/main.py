@@ -49,8 +49,19 @@ def process_task(task):
                     "resized_image_path": f"/shared/resized_{task_id}.png"
                 }
             }
-        redis_client.set(f"task_result:{task_id}", json.dumps(result))
+        redis_client.set(f"task_result:{task_id}", json.dumps(result), ex=3600)
         TASKS_PROCESSED.labels(status="success").inc()
+
+        persistent_result = {
+            "timestamped_queued": task["timestamp"],
+            "timestamp_completed": result["timestamp_completed"],
+            "task_id": task_id,
+            "result":{
+                "image_url": task["image_url"],
+                "width":width,
+                "height":height
+            }
+        }
     except Exception:
         TASKS_PROCESSED.labels(status="error").inc()
         raise

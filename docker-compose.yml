@@ -18,6 +18,22 @@ services:
     image: redis:7-alpine
     expose:
       - "6379"
+  
+  redis_exporter:
+    image: oliver006/redis_exporter:latest
+    expose:
+      - "9121"
+    depends_on:
+      - redis
+    environment:
+      - REDIS_ADDR=redis:6379
+  
+  redis_insight:
+    image: redis/redisinsight:latest
+    ports:
+      - "9091:5540"
+    depends_on:
+      - redis
 
   worker:
     build: ./worker
@@ -27,6 +43,13 @@ services:
       - redis
     volumes:
       - resized_images:/shared
+  
+  cleanup_crew:
+    build: ./cleanup_crew
+    depends_on:
+      - redis
+    volumes:
+    - resized_images:/shared
 
   prometheus:
     image: prom/prometheus:latest
@@ -34,5 +57,16 @@ services:
      - "9090:9090"
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - worker
+      - api
+  
+  postgres:
+    image: postgres:latest
+    expose:
+      - "5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 volumes:
   resized_images:
+  postgres_data:
