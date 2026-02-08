@@ -6,6 +6,8 @@ import requests
 from io import BytesIO
 import time
 from prometheus_client import Counter, Histogram, start_http_server
+import psycopg
+import os
 
 
 
@@ -62,6 +64,25 @@ def process_task(task):
                 "height":height
             }
         }
+        with psycopg.connect(
+            host=os.environ["DB_HOST"],
+            port=os.environ["DB_PORT"],
+            dbname=os.environ["DB_NAME"],
+            user=os.environ["DB_USER"],
+            password=os.environ["DB_PASSWORD"],
+        ) as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "INSERT INTO task_results (timestamp_queued, timestamp_completed, task_id, image_url, width, height) VALUES (%s, %s, %s, %s, %s, %s)",
+                    (
+                        persistent_result["timestamped_queued"],
+                        persistent_result["timestamp_completed"],
+                        persistent_result["task_id"],
+                        persistent_result["result"]["image_url"],
+                        persistent_result["result"]["width"],
+                        persistent_result["result"]["height"],
+                    )
+                )
     except Exception:
         TASKS_PROCESSED.labels(status="error").inc()
         raise
