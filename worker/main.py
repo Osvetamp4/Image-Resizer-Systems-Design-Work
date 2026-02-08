@@ -8,6 +8,7 @@ import time
 from prometheus_client import Counter, Histogram, start_http_server
 import psycopg
 import os
+from hashlib import sha256
 
 
 
@@ -51,7 +52,10 @@ def process_task(task):
                     "resized_image_path": f"/shared/resized_{task_id}.png"
                 }
             }
+        cache_hash = sha256(task['image_url'] + "|" + width + "|" + height)
         redis_client.set(f"task_result:{task_id}", json.dumps(result), ex=3600)
+        redis_client.set(f"task_result_hash:{cache_hash}", task_id, ex=3550)
+
         TASKS_PROCESSED.labels(status="success").inc()
 
         persistent_result = {
