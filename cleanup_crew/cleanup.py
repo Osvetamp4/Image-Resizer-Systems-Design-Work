@@ -32,5 +32,4 @@ def working_loop():
 
 
 if __name__ == '__main__':
-    #start_http_server(8000)
     working_loop()
