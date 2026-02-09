@@ -52,7 +52,7 @@ def process_task(task):
                     "resized_image_path": f"/shared/resized_{task_id}.png"
                 }
             }
-        cache_hash = sha256(task['image_url'] + "|" + width + "|" + height)
+        cache_hash = sha256((task['image_url'] + "|" + str(width) + "|" + str(height)).encode('utf-8')).hexdigest()
         redis_client.set(f"task_result:{task_id}", json.dumps(result), ex=3600)
         redis_client.set(f"task_result_hash:{cache_hash}", task_id, ex=3550)
 

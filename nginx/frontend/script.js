@@ -41,6 +41,7 @@ resizeForm.addEventListener('submit', async (e) => {
         
         const data = await response.json();
         currentTaskId = data.task_id;
+        console.log(currentTaskId)
         
         //shows status section should be queued
         document.getElementById('taskId').textContent = currentTaskId;

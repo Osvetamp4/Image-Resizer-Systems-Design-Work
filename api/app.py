@@ -1,3 +1,4 @@
+from hashlib import sha256
 from flask import Flask, request, jsonify, Response, g
 import redis
 import json
@@ -72,6 +73,14 @@ def queue_task():
             "timestamp": datetime.now().isoformat(),
             "parameters": data.get("parameters", {})
         }
+        task_hash = sha256((task['image_url'] + "|" + str(task['parameters'].get('width')) + "|" + str(task['parameters'].get('height'))).encode('utf-8')).hexdigest()
+        if redis_client.exists(f"task_result_hash:{task_hash}") == 1:
+            task_id = redis_client.get(f"task_result_hash:{task_hash}")
+            print(task_id)
+            return jsonify({
+                "status": "hashed",
+                "task_id": task_id
+            }), 202
         
         #send this task to redis container
         task_id = redis_client.incr("task_counter")
