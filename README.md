@@ -64,7 +64,7 @@ Build a compact, end-to-end system that looks and behaves like a production imag
 
 ## Demo video
 <video controls width="720">
-	<source src="/resizer.mp4" type="video/mp4">
+	<source src="./resizer.mp4" type="video/mp4">
 	Your browser does not support the video tag.
 </video>
 
