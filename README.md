@@ -63,10 +63,7 @@ Build a compact, end-to-end system that looks and behaves like a production imag
 - Polls status until completion, then displays the resized image from the shared volume.
 
 ## Demo video
-<video controls width="720">
-	<source src="resizer.mp4" type="video/mp4">
-	Your browser does not support the video tag.
-</video>
+[Demo video](resizer.mp4)
 
 ## Cleanup
 - Background process scans Redis for active task results and removes orphaned files from shared storage.
