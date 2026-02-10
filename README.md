@@ -62,6 +62,12 @@ Build a compact, end-to-end system that looks and behaves like a production imag
 - Single-page form to submit an image URL and dimensions.
 - Polls status until completion, then displays the resized image from the shared volume.
 
+## Demo video
+<video controls width="720">
+	<source src="/imageresize.mp4" type="video/mp4">
+	Your browser does not support the video tag.
+</video>
+
 ## Cleanup
 - Background process scans Redis for active task results and removes orphaned files from shared storage.
 
