@@ -63,19 +63,10 @@ Build a compact, end-to-end system that looks and behaves like a production imag
 - Polls status until completion, then displays the resized image from the shared volume.
 
 ## Demo video
-<div class="video-card">
-                <div class="video-wrapper">
-                    <video controls>
-                        <source src="resizer.mp4" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
-                <div class="video-description">
-                    <h2>FakeStackOverflow - Fall 2025</h2>
-                    <a href="https://github.com/neu-cs4530/fall25-project-fall25-project-group-705"><small><em>FakeStackOverflow Github link</em></small></a>
-                    <p>Our 2025 FakeStackOverflow Codebase project submission for Fall 2025. It involves mainly managing the newly built notification system as well as building up a new set of API routes to communicate User Profile information on demand./p>
-                </div>
-            </div>
+<video controls width="720">
+	<source src="resizer.mp4" type="video/mp4">
+	Your browser does not support the video tag.
+</video>
 
 ## Cleanup
 - Background process scans Redis for active task results and removes orphaned files from shared storage.
