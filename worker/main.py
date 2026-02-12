@@ -89,6 +89,12 @@ def process_task(task):
                 )
     except Exception:
         TASKS_PROCESSED.labels(status="error").inc()
+        result = {
+                "status": "failed",
+                "timestamp_queued": task["timestamp"],
+                "task_id": task_id,
+            }
+        redis_client.set(f"task_result:{task_id}", json.dumps(result), ex=3600)
         raise
     finally:
         TASK_PROCESSING_TIME.observe(time.time() - start_time)
@@ -103,7 +109,10 @@ def working_loop():
 
         if task_data:
             task = json.loads(task_data[1])
-            process_task(task)
+            try:
+                process_task(task)
+            except Exception:
+                print(f"Error processing task {task['id']}")
         time.sleep(0.1)
 
 
